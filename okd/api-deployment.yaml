@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: api
-  name: api
+    app: dark-patterns-api
+  name: dark-patterns-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-     app: api        
+     app: dark-patterns-api        
   template:
     metadata:            
       labels:
-        app: api        
+        app: dark-patterns-api        
     spec:
       containers:
-        - name: api
+        - name: dark-patterns-api
           image: jcgardey/dark-patterns:latest
           imagePullPolicy: Always
           ports:
