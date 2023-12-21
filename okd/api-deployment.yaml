@@ -20,4 +20,14 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
-              protocol: TCP  
+              protocol: TCP
+          env:
+            # Define the environment variable
+            - name: DB_NAME 
+              value: "dark-patterns"  
+            - name: DB_PASS
+              value: "dark-patterns"  
+            - name: DB_USER
+              value: "dark-patterns"  
+            - name: DB_HOST
+              value: "dark-patterns-db"  

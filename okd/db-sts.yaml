@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dark-patterns-db  
+spec:
+  podManagementPolicy: Parallel
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: dark-patterns-db
+  serviceName: dark-patterns-db
+  template:
+    metadata:      
+      labels:
+        app: dark-patterns-db
+    spec:
+      containers:
+        - name: dark-patterns-db
+          image: mysql:8
+          imagePullPolicy: IfNotPresent          
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MYSQL_USER
+              value: "dark-patterns"  
+            - name: MYSQL_PASSWORD
+              value: "dark-patterns"  
+            - name: MYSQL_ROOT_PASSWORD
+              value: "dark-patterns"  
+            - name: MYSQL_DATABASE
+              value: "dark-patterns"  
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: dark-patterns-db
+  volumeClaimTemplates:
+    - metadata:        
+        name: dark-patterns-db
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
