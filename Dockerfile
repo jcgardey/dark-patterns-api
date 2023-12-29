@@ -13,6 +13,7 @@ RUN apt-get update \
 
 RUN git clone https://github.com/jcgardey/dark-patterns-api.git
 WORKDIR ${HOME}/dark-patterns-api/src
+RUN git checkout master && git pull
 
 RUN pip install -r requirements.txt
 RUN chown -R ${USER}:${USER} /usr/src/app
