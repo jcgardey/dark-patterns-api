@@ -17,11 +17,11 @@ spec:
     spec:
       containers:
         - name: dark-patterns-db
-          image: mysql:8
+          image: mariadb:11.0
           imagePullPolicy: IfNotPresent          
           ports:
             - containerPort: 3306
-              protocol: TCP
+              protocol: TCP   
           env:
             - name: MYSQL_USER
               value: "dark-patterns"  
@@ -30,10 +30,21 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               value: "dark-patterns"  
             - name: MYSQL_DATABASE
-              value: "dark-patterns"  
+              value: "darkpatterns"  
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: dark-patterns-db
+            - mountPath: /etc/mysql/conf.d/
+              name: config-volume
+            - mountPath: /docker-entrypoint-initdb.d
+              name: init-volume
+      volumes:
+      - name: config-volume
+        configMap:
+          name: mariadb-config
+      - name: init-volume
+        configMap:
+          name: mariadb-init
   volumeClaimTemplates:
     - metadata:        
         name: dark-patterns-db

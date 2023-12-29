@@ -19,7 +19,7 @@ services:
     volumes:
       - ./src:/usr/src/app/dark-patterns-api/src
   db:
-    image: mysql:8
+    image: mariadb:11.0
     container_name: dark-patterns-db
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped

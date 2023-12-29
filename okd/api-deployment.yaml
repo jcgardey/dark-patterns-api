@@ -24,7 +24,7 @@ spec:
           env:
             # Define the environment variable
             - name: DB_NAME 
-              value: "dark-patterns"  
+              value: "darkpatterns"  
             - name: DB_PASS
               value: "dark-patterns"  
             - name: DB_USER
