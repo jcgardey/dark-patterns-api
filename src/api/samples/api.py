@@ -18,3 +18,8 @@ class CreateSampleAPI(APIView):
          questionnaire=request.data['questionnaire'], 
          sample_data=request.data['sample_data'] )
       return Response(SampleSerializer(sample).data, status=status.HTTP_201_CREATED)
+
+class DeleteSampleAPI(APIView):
+
+   def delete(self, request, id):
+      return Response(Sample.objects.get(pk=id).delete())

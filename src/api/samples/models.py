@@ -6,4 +6,4 @@ class Sample(models.Model):
     dark = models.BooleanField(default=False)
     questionnaire = models.JSONField()
     date = models.DateTimeField(auto_now=True)
-    sample_data = models.JSONField(default={})
+    sample_data = models.JSONField(default=dict())
