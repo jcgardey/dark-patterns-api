@@ -1,3 +1,4 @@
 src/.local
 src/.cache
 src/.bash_history
+__pycache__/
