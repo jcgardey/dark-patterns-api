@@ -4,6 +4,7 @@ from rest_framework import status
 
 from .models import Sample
 from .serializers import SampleSerializer
+from user_sessions.models import UserSession
 
 class GetSamplesAPI(APIView):
     def get(self, request):
@@ -11,8 +12,8 @@ class GetSamplesAPI(APIView):
 
 class CreateSampleAPI(APIView):
    
-   def post(self, request):
-      sample = Sample.objects.create(
+   def post(self, request, user_session_id):
+      sample = UserSession.objects.get(pk=user_session_id).samples.create(
          website=request.data['website'], 
          dark=request.data['dark'], 
          questionnaire=request.data['questionnaire'], 
