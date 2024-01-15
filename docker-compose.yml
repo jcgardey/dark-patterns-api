@@ -13,7 +13,6 @@ services:
       DB_USER: dark-patterns
       DB_PASS: dark-patterns
       DB_HOST: dark-patterns-db
-    working_dir: /usr/src/app/dark-patterns-api/src
     ports:
       - "8002:8000"
     volumes:
