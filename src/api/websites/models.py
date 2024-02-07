@@ -5,6 +5,7 @@ from django.db import models
 
 class WebsiteGroup(models.Model):
     name = models.CharField(max_length=255)
+    order = models.SmallIntegerField()
 
 class Website(models.Model):
     name = models.CharField(max_length=255)
