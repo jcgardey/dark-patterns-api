@@ -21,3 +21,8 @@ class CreateUserSessionAPI(APIView):
 class GetUserSessionAPI(APIView):
     def get(self, request, id):
       return Response(UserSessionFullSerializer(UserSession.objects.get(pk=id)).data)
+
+class DeleteUserSessionAPI(APIView):
+
+   def delete(self, request, id):
+      return Response(UserSession.objects.get(pk=id).delete())
