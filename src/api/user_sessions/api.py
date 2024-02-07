@@ -4,7 +4,7 @@ from rest_framework import status
 
 from .models import UserSession
 from websites.models import WebsiteGroup
-from .serializers import UserSessionBriefSerializer, UserSessionFullSerializer
+from .serializers import UserSessionBriefSerializer, UserSessionFullSerializer, WebsiteStatusSerializer
 from django.db.models import Count
 
 class GetUserSessionsAPI(APIView):
@@ -34,3 +34,14 @@ class DeleteUserSessionAPI(APIView):
 
    def delete(self, request, id):
       return Response(UserSession.objects.get(pk=id).delete())
+   
+
+class GetUserSessionWebsitesStatusAPI(APIView):
+   
+   def get(self, request, user_session_id):
+      user_session = UserSession.objects.get(pk=user_session_id)
+      def add_status(website):
+         website.completed = user_session.samples.filter(website=website).exists()
+         return website
+      websites = map(add_status, user_session.website_group.websites.all())
+      return Response(WebsiteStatusSerializer(websites,many=True).data)
