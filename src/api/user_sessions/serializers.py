@@ -7,7 +7,7 @@ from rest_framework import serializers
 class UserSessionBriefSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSession
-        fields = ('email', 'country')
+        fields = ('id', 'email', 'country')
 
 class UserSessionFullSerializer(serializers.ModelSerializer):
     samples = SampleSerializer(many=True)
