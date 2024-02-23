@@ -4,7 +4,8 @@ from rest_framework import status
 
 from .models import UserSession
 from websites.models import WebsiteGroup
-from .serializers import UserSessionBriefSerializer, UserSessionFullSerializer, WebsiteStatusSerializer
+from .serializers import UserSessionBriefSerializer, UserSessionFullSerializer
+from websites.serializers import WebsiteStatusSerializer
 from django.db.models import Count
 
 class GetUserSessionsAPI(APIView):

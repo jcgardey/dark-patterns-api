@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from .serializers import WebsiteGroupSerializer
+from .serializers import WebsiteGroupSerializer, WebsiteGroupWithUserSessionsSerializer
 from .models import WebsiteGroup, Website
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,3 +18,10 @@ class DeleteWebsiteGroupAPI(APIView):
 
    def delete(self, request, id):
       return Response(WebsiteGroup.objects.get(pk=id).delete())
+
+class GetWebsiteGroupAPI(APIView):
+   
+   def get(self, request, id):
+      group = WebsiteGroup.objects.get(pk=id)
+      return Response(WebsiteGroupWithUserSessionsSerializer(group).data, status=status.HTTP_200_OK)
+
