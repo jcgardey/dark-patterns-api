@@ -5,8 +5,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-
-
 class CreateWebsiteGroupAPI(APIView):
    
    def post(self, request):
@@ -15,3 +13,8 @@ class CreateWebsiteGroupAPI(APIView):
          group.websites.create(name=website_data['name'], url=website_data['url'], instructions=website_data['instructions'])
       group.save()
       return Response(WebsiteGroupSerializer(group).data, status=status.HTTP_201_CREATED)
+
+class DeleteWebsiteGroupAPI(APIView):
+
+   def delete(self, request, id):
+      return Response(WebsiteGroup.objects.get(pk=id).delete())
