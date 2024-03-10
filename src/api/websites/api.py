@@ -25,3 +25,9 @@ class GetWebsiteGroupAPI(APIView):
       group = WebsiteGroup.objects.get(pk=id)
       return Response(WebsiteGroupWithUserSessionsSerializer(group).data, status=status.HTTP_200_OK)
 
+class GetAllWebsitesGroupsAPI(APIView):
+
+   def get(self, request):
+      all_groups = WebsiteGroup.objects.all()
+      return Response(WebsiteGroupWithUserSessionsSerializer(all_groups, many=True).data, status=status.HTTP_200_OK)
+
