@@ -12,6 +12,6 @@ class UserSessionFullSerializer(serializers.ModelSerializer):
     samples = SampleSerializer(many=True)
     class Meta:
         model = UserSession
-        fields = ('email', 'country', 'samples')
+        fields = ('id', 'email', 'country', 'samples')
 
 

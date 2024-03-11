@@ -13,7 +13,7 @@ class WebsiteGroupSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = WebsiteGroup
-        fields = ('name', 'websites')
+        fields = ('id', 'name', 'websites')
 
 class WebsiteStatusSerializer(serializers.ModelSerializer):
     completed = serializers.BooleanField(default=False)
@@ -27,4 +27,4 @@ class WebsiteGroupWithUserSessionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WebsiteGroup
-        fields = ('name', 'user_sessions')
+        fields = ('id', 'name', 'user_sessions')
