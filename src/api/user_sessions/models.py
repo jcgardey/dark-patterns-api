@@ -17,6 +17,7 @@ class UserSession(models.Model):
         ('>6', '> 6'),
     ]
 
+    date= models.DateTimeField(auto_now_add=True, null=True)
     email = models.EmailField()
     country = models.CharField(max_length=255)
     age = models.PositiveIntegerField(null=True)
