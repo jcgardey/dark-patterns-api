@@ -7,6 +7,7 @@ from .serializers import SampleSerializer
 from user_sessions.models import UserSession
 from websites.models import Website
 
+import datetime
 class GetSamplesAPI(APIView):
     def get(self, request):
       return Response(SampleSerializer(Sample.objects.all(), many=True).data)
@@ -18,7 +19,10 @@ class CreateSampleAPI(APIView):
          website=Website.objects.get(pk=website_id), 
          dark=request.data['dark'], 
          questionnaire=request.data['questionnaire'], 
-         sample_data=request.data['sample_data'] )
+         sample_data=request.data['sample_data'],
+         start= datetime.datetime.fromisoformat(request.data['start']),
+         end= datetime.datetime.fromisoformat(request.data['end']),
+         )
       return Response(SampleSerializer(sample).data, status=status.HTTP_201_CREATED)
 
 class DeleteSampleAPI(APIView):
