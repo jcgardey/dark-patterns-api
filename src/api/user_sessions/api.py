@@ -4,7 +4,7 @@ from rest_framework import status
 
 from .models import UserSession
 from websites.models import WebsiteGroup
-from .serializers import UserSessionBriefSerializer, UserSessionFullSerializer
+from .serializers import UserSessionBriefSerializer, UserSessionFullSerializer, CreateUserSessionSerializer
 from websites.serializers import WebsiteStatusSerializer
 from django.db.models import Count
 
@@ -15,10 +15,11 @@ class GetUserSessionsAPI(APIView):
 class CreateUserSessionAPI(APIView):
 
     def post(self, request):
-        if (request.data.get('email', None) is None):
-            return Response({'error': 'email.invalid' }, status=status.HTTP_400_BAD_REQUEST)
+        user_session_serializer = CreateUserSessionSerializer(data=request.data)
+        if (not user_session_serializer.is_valid()):
+            return Response(user_session_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        user_session = UserSession(email=request.data['email'], country=request.data['country'])
+        user_session = UserSession.objects.create(**user_session_serializer.validated_data)
 
         # assign a website group to the user session
         website_groups = WebsiteGroup.objects.annotate(sessions_count=Count('user_sessions')).order_by('sessions_count', 'order')
