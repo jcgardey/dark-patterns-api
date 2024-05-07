@@ -18,7 +18,7 @@ class UserSession(models.Model):
     ]
 
     date= models.DateTimeField(auto_now_add=True, null=True)
-    email = models.EmailField()
+    email = models.EmailField(blank=True)
     country = models.CharField(max_length=255)
     age = models.PositiveIntegerField(null=True)
     gender = models.CharField(choices=GENDER_CHOICES, default='other', max_length=6)
