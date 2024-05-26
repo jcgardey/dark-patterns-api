@@ -19,7 +19,7 @@ class WebsiteStatusSerializer(serializers.ModelSerializer):
     completed = serializers.BooleanField(default=False)
     class Meta:
         model = Website
-        fields = ('id', 'name', 'url', 'instructions', 'completed')
+        fields = ('id', 'name', 'url', 'instructions', 'completed', 'ux_analyzer_token')
 
 
 class WebsiteGroupWithUserSessionsSerializer(serializers.ModelSerializer):

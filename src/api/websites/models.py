@@ -12,3 +12,4 @@ class Website(models.Model):
     url = models.URLField()
     instructions = models.TextField()
     group = models.ForeignKey(WebsiteGroup, on_delete=models.CASCADE, related_name='websites')
+    ux_analyzer_token = models.CharField(null=True)
