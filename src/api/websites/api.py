@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from .serializers import WebsiteGroupSerializer, WebsiteGroupWithUserSessionsSerializer
+from .serializers import WebsiteGroupSerializer, WebsiteGroupWithUserSessionsSerializer, WebsiteSerializer
 from .models import WebsiteGroup, Website
 from rest_framework.response import Response
 from rest_framework import status
@@ -31,3 +31,28 @@ class GetAllWebsitesGroupsAPI(APIView):
       all_groups = WebsiteGroup.objects.all()
       return Response(WebsiteGroupWithUserSessionsSerializer(all_groups, many=True).data, status=status.HTTP_200_OK)
 
+
+class CreateWebsiteAPI(APIView):
+   def post(self, request):
+      website = Website.objects.create(
+         name=request.data['name'], 
+         url=request.data['url'], 
+         instructions=request.data['instructions'],
+         ux_analyzer_token=request.data['ux_analyzer_token'])
+      return Response(WebsiteSerializer(website).data, status=status.HTTP_201_CREATED)
+
+class UpdateWebsiteAPI(APIView):
+
+   def put(self, request, id):
+      website = Website.objects.get(pk=id)
+      if (request.data['ux_analyzer_token']):
+         website.ux_analyzer_token = request.data['ux_analyzer_token']
+      website.save()
+      return Response(WebsiteSerializer(website).data, status=status.HTTP_200_OK)
+   
+class GetAllWebsitesAPI(APIView):
+
+   def get(self, request):
+      all_websites = Website.objects.all()
+      return Response(WebsiteSerializer(all_websites, many=True).data, status=status.HTTP_200_OK)
+      
