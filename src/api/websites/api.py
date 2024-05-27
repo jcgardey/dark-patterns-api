@@ -56,8 +56,9 @@ class UpdateWebsiteAPI(APIView):
 
    def put(self, request, id):
       website = Website.objects.get(pk=id)
-      if (request.data['ux_analyzer_token']):
-         website.ux_analyzer_token = request.data['ux_analyzer_token']
+      website.name = request.data['name']
+      website.url = request.data['url']
+      website.ux_analyzer_token = request.data['ux_analyzer_token']
       website.save()
       return Response(WebsiteSerializer(website).data, status=status.HTTP_200_OK)
    
