@@ -24,6 +24,17 @@ class GetWebsiteGroupAPI(APIView):
    def get(self, request, id):
       group = WebsiteGroup.objects.get(pk=id)
       return Response(WebsiteGroupSerializer(group).data, status=status.HTTP_200_OK)
+   
+   def put(self, request, id):
+      group = WebsiteGroup.objects.get(pk=id)
+      websites = []
+      for website_id in request.data['websites']:
+         websites.append(Website.objects.get(pk=website_id))
+      group.websites.set(websites)
+      group.name = request.data['name']
+      group.order = request.data['order']
+      group.save()
+      return Response(WebsiteGroupSerializer(group).data, status=status.HTTP_200_OK)
 
 class GetAllWebsitesGroupsAPI(APIView):
 
