@@ -5,7 +5,7 @@ from user_sessions.serializers import UserSessionFullSerializer
 class WebsiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Website
-        fields = ('name', 'url', 'instructions')
+        fields = ('id', 'name', 'url', 'instructions', 'ux_analyzer_token')
 
 
 class WebsiteGroupSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class WebsiteGroupSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = WebsiteGroup
-        fields = ('id', 'name', 'websites')
+        fields = ('id', 'name', 'websites', 'order')
 
 class WebsiteStatusSerializer(serializers.ModelSerializer):
     completed = serializers.BooleanField(default=False)
