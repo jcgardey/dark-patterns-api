@@ -9,8 +9,8 @@ class CreateWebsiteGroupAPI(APIView):
    
    def post(self, request):
       group = WebsiteGroup.objects.create(name=request.data['name'], order=request.data['order'])
-      for website_data in request.data['websites']:
-         group.websites.create(name=website_data['name'], url=website_data['url'], instructions=website_data['instructions'])
+      for website_id in request.data['websites']:
+         group.websites.add( Website.objects.get(pk=website_id))
       group.save()
       return Response(WebsiteGroupSerializer(group).data, status=status.HTTP_201_CREATED)
 
@@ -23,7 +23,7 @@ class GetWebsiteGroupAPI(APIView):
    
    def get(self, request, id):
       group = WebsiteGroup.objects.get(pk=id)
-      return Response(WebsiteGroupWithUserSessionsSerializer(group).data, status=status.HTTP_200_OK)
+      return Response(WebsiteGroupSerializer(group).data, status=status.HTTP_200_OK)
 
 class GetAllWebsitesGroupsAPI(APIView):
 

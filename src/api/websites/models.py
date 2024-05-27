@@ -11,5 +11,5 @@ class Website(models.Model):
     name = models.CharField(max_length=255)
     url = models.URLField()
     instructions = models.TextField()
-    group = models.ForeignKey(WebsiteGroup, on_delete=models.CASCADE, related_name='websites')
-    ux_analyzer_token = models.CharField(null=True)
+    group = models.ManyToManyField(WebsiteGroup, related_name='websites')
+    ux_analyzer_token = models.CharField(null=True, max_length=255)
