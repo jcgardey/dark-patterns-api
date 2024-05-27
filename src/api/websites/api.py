@@ -35,7 +35,7 @@ class GetWebsiteGroupAPI(APIView):
       group.order = request.data['order']
       group.save()
       return Response(WebsiteGroupSerializer(group).data, status=status.HTTP_200_OK)
-
+   
 class GetAllWebsitesGroupsAPI(APIView):
 
    def get(self, request):
@@ -61,6 +61,9 @@ class UpdateWebsiteAPI(APIView):
       website.ux_analyzer_token = request.data['ux_analyzer_token']
       website.save()
       return Response(WebsiteSerializer(website).data, status=status.HTTP_200_OK)
+   
+   def delete(self, request, id):
+      return Response(Website.objects.get(pk=id).delete())
    
 class GetAllWebsitesAPI(APIView):
 
