@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from .serializers import WebsiteGroupSerializer, WebsiteGroupWithUserSessionsSerializer, WebsiteSerializer
-from .models import WebsiteGroup, Website
+from .models import WebsiteGroup, Website, WebsiteInGroup
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -9,8 +9,9 @@ class CreateWebsiteGroupAPI(APIView):
    
    def post(self, request):
       group = WebsiteGroup.objects.create(name=request.data['name'], order=request.data['order'])
-      for website_id in request.data['websites']:
-         group.websites.add( Website.objects.get(pk=website_id))
+      for website_data in request.data['websites']:
+         website = Website.objects.get(pk=website_data['website_id'])
+         group.website_items.create(website=website, order=website_data['order'])
       group.save()
       return Response(WebsiteGroupSerializer(group).data, status=status.HTTP_201_CREATED)
 
@@ -27,10 +28,12 @@ class GetWebsiteGroupAPI(APIView):
    
    def put(self, request, id):
       group = WebsiteGroup.objects.get(pk=id)
-      websites = []
-      for website_id in request.data['websites']:
-         websites.append(Website.objects.get(pk=website_id))
-      group.websites.set(websites)
+      group.website_items.all().delete()
+      for website_data in request.data['websites']:
+         website = Website.objects.get(pk=website_data['website_id'])
+         group.website_items.create(website=website, order=website_data['order'])
+         #websites.append(WebsiteInGroup.objects.create(website=website, order=website_data['order']))
+      #group.websites.set(websites)
       group.name = request.data['name']
       group.order = request.data['order']
       group.save()

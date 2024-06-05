@@ -45,5 +45,5 @@ class GetUserSessionWebsitesStatusAPI(APIView):
       def add_status(website):
          website.completed = user_session.samples.filter(website=website).exists()
          return website
-      websites = map(add_status, user_session.website_group.websites.all())
+      websites = map(add_status, user_session.website_group.get_websites_by_order())
       return Response(WebsiteStatusSerializer(websites,many=True).data)
