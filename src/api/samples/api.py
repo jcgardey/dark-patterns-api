@@ -39,9 +39,8 @@ class Echo:
 
 class ExportSamplesAPI(APIView):
 
-   def get(self, request, website_id):
+   def get(self, request):
 
-      website = Website.objects.get(pk=website_id)
       def format_row(sample):
          return [
             sample.user_session.email, 
@@ -53,10 +52,10 @@ class ExportSamplesAPI(APIView):
          ]
       pseudo_buffer = Echo()
       writer = csv.writer(pseudo_buffer)
-      rows = list(map(format_row, Sample.objects.filter(website=website)))
+      rows = list(map(format_row, Sample.objects.all()))
       header = [["usuario", "website", "start", "end", "questionnaire", "sample_data"]]
       return StreamingHttpResponse (
         (writer.writerow(row) for row in (header + rows)),
         content_type="text/csv",
-        headers={"Content-Disposition": 'attachment; filename="{}.csv"'.format(website.name)},
+        headers={"Content-Disposition": 'attachment; filename="muestras.csv"'},
       )
