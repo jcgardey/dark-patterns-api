@@ -55,8 +55,8 @@ class ExportSamplesAPI(APIView):
       writer = csv.writer(pseudo_buffer)
       rows = list(map(format_row, Sample.objects.filter(website=website)))
       header = [["usuario", "website", "start", "end", "questionnaire", "sample_data"]]
-      return StreamingHttpResponse(
+      return StreamingHttpResponse (
         (writer.writerow(row) for row in (header + rows)),
         content_type="text/csv",
         headers={"Content-Disposition": 'attachment; filename="{}.csv"'.format(website.name)},
-    )
+      )

@@ -7,6 +7,8 @@ from websites.models import WebsiteGroup
 from .serializers import UserSessionBriefSerializer, UserSessionFullSerializer, CreateUserSessionSerializer
 from websites.serializers import WebsiteStatusSerializer
 from django.db.models import Count
+import csv
+from django.http import StreamingHttpResponse
 
 class GetUserSessionsAPI(APIView):
     def get(self, request):
@@ -47,3 +49,30 @@ class GetUserSessionWebsitesStatusAPI(APIView):
          return website
       websites = map(add_status, user_session.website_group.get_websites_by_order())
       return Response(WebsiteStatusSerializer(websites,many=True).data)
+
+class Echo:
+    def write(self, value):
+        return value
+
+class ExportUserSessionsAPI(APIView):
+
+   def get(self, request):
+      def format_row(session):
+        return [
+            session.website_group.name,
+            session.email,
+            session.country, 
+            session.age,
+            session.gender,
+            session.purchases,
+            session.date,
+        ]
+      
+      pseudo_buffer = Echo()
+      writer = csv.writer(pseudo_buffer)
+      rows = list(map(format_row, UserSession.objects.all()))
+      header = [["website_group", "email", "country", "age", "gender", "purchases", "date"]]
+      return StreamingHttpResponse(
+        (writer.writerow(row) for row in (header + rows)),
+        content_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="usuarios.csv"'})
