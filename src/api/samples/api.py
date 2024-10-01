@@ -43,6 +43,7 @@ class ExportSamplesAPI(APIView):
 
       def format_row(sample):
          return [
+            sample.user_session.id,
             sample.user_session.email, 
             sample.website.name, 
             sample.start, 
@@ -53,7 +54,7 @@ class ExportSamplesAPI(APIView):
       pseudo_buffer = Echo()
       writer = csv.writer(pseudo_buffer)
       rows = list(map(format_row, Sample.objects.all()))
-      header = [["usuario", "website", "start", "end", "questionnaire", "sample_data"]]
+      header = [["id", "usuario", "website", "start", "end", "questionnaire", "sample_data"]]
       return StreamingHttpResponse (
         (writer.writerow(row) for row in (header + rows)),
         content_type="text/csv",
