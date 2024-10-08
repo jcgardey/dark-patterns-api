@@ -59,6 +59,7 @@ class ExportUserSessionsAPI(APIView):
    def get(self, request):
       def format_row(session):
         return [
+            session.id,
             session.website_group.name,
             session.email,
             session.country, 
@@ -71,7 +72,7 @@ class ExportUserSessionsAPI(APIView):
       pseudo_buffer = Echo()
       writer = csv.writer(pseudo_buffer)
       rows = list(map(format_row, UserSession.objects.all()))
-      header = [["website_group", "email", "country", "age", "gender", "purchases", "date"]]
+      header = [["id", "website_group", "email", "country", "age", "gender", "purchases", "date"]]
       return StreamingHttpResponse(
         (writer.writerow(row) for row in (header + rows)),
         content_type="text/csv",
