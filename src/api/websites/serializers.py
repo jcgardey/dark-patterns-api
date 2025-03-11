@@ -7,13 +7,15 @@ class WebsiteSerializer(serializers.ModelSerializer):
         model = Website
         fields = ('id', 'name', 'url', 'instructions', 'ux_analyzer_token')
 
-
 class WebsiteGroupSerializer(serializers.ModelSerializer):
-    websites = WebsiteSerializer(many=True)
+    websites = serializers.SerializerMethodField()
     
     class Meta:
         model = WebsiteGroup
         fields = ('id', 'name', 'websites', 'order')
+    
+    def get_websites(self, group):
+        return WebsiteSerializer(group.get_websites_by_order(), many=True).data
 
 class WebsiteStatusSerializer(serializers.ModelSerializer):
     completed = serializers.BooleanField(default=False)

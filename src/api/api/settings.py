@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-cof#0)833(lo=ilu34=1m45&2008z9yqz7enm*%kt(l@bjf1wi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'dark-patterns-api.okd.lifia.info.unlp.edu.ar']
+ALLOWED_HOSTS = ['localhost', 'dark-patterns-api.okd.lifia.info.unlp.edu.ar', 'sitios-dp-api.okd.lifia.info.unlp.edu.ar']
 
 
 # Application definition

@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import csv
+from django.http import StreamingHttpResponse
 
 from .models import Sample
 from .serializers import SampleSerializer
@@ -29,3 +31,32 @@ class DeleteSampleAPI(APIView):
 
    def delete(self, request, id):
       return Response(Sample.objects.get(pk=id).delete())
+
+
+class Echo:
+    def write(self, value):
+        return value
+
+class ExportSamplesAPI(APIView):
+
+   def get(self, request):
+
+      def format_row(sample):
+         return [
+            sample.user_session.id,
+            sample.user_session.email, 
+            sample.website.name, 
+            sample.start, 
+            sample.end, 
+            sample.questionnaire, 
+            sample.sample_data
+         ]
+      pseudo_buffer = Echo()
+      writer = csv.writer(pseudo_buffer)
+      rows = list(map(format_row, Sample.objects.all()))
+      header = [["id", "usuario", "website", "start", "end", "questionnaire", "sample_data"]]
+      return StreamingHttpResponse (
+        (writer.writerow(row) for row in (header + rows)),
+        content_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="muestras.csv"'},
+      )
