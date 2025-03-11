@@ -1,5 +1,5 @@
 from django.urls import path
-from user_sessions.api import CreateUserSessionAPI, GetUserSessionsAPI, GetUserSessionAPI, DeleteUserSessionAPI, GetUserSessionWebsitesStatusAPI
+from user_sessions.api import CreateUserSessionAPI, GetUserSessionsAPI, GetUserSessionAPI, DeleteUserSessionAPI, GetUserSessionWebsitesStatusAPI, AssignFollowUpToUserSessionAPI
 from samples.api import CreateSampleAPI
 
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path('new', CreateUserSessionAPI.as_view()),
     path('<int:user_session_id>/websites/<int:website_id>/samples/new', CreateSampleAPI.as_view()),
     path('<int:user_session_id>/websites/status', GetUserSessionWebsitesStatusAPI.as_view()),
+    path('<int:user_session_id>/follow_up/<int:follow_up_group_id>', AssignFollowUpToUserSessionAPI.as_view()),
 ]

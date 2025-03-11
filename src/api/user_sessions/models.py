@@ -24,4 +24,5 @@ class UserSession(models.Model):
     gender = models.CharField(choices=GENDER_CHOICES, default='other', max_length=6)
     purchases = models.CharField(choices=PURCHASE_CHOICES, default='none', max_length=6)
     website_group = models.ForeignKey(WebsiteGroup, on_delete=models.CASCADE, related_name='user_sessions', null=True)
+    follow_up_group = models.ForeignKey(WebsiteGroup, on_delete=models.CASCADE, related_name='follow_ups', null=True)
     

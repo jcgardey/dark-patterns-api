@@ -4,13 +4,13 @@ from rest_framework import status
 
 from .models import UserSession
 from websites.models import WebsiteGroup
-from .serializers import UserSessionBriefSerializer, UserSessionFullSerializer, CreateUserSessionSerializer
+from .serializers import UserSessionBriefSerializer,CreateUserSessionSerializer, UserSessionWithWebsitesGroup
 from websites.serializers import WebsiteStatusSerializer
 from django.db.models import Count
 
 class GetUserSessionsAPI(APIView):
     def get(self, request):
-      return Response(UserSessionBriefSerializer(UserSession.objects.all(), many=True).data)
+      return Response(UserSessionWithWebsitesGroup(UserSession.objects.all(), many=True).data)
 
 class CreateUserSessionAPI(APIView):
 
@@ -30,7 +30,7 @@ class CreateUserSessionAPI(APIView):
 
 class GetUserSessionAPI(APIView):
     def get(self, request, id):
-      return Response(UserSessionFullSerializer(UserSession.objects.get(pk=id)).data)
+      return Response(UserSessionWithWebsitesGroup(UserSession.objects.get(pk=id)).data)
 
 class DeleteUserSessionAPI(APIView):
 
@@ -45,5 +45,20 @@ class GetUserSessionWebsitesStatusAPI(APIView):
       def add_status(website):
          website.completed = user_session.samples.filter(website=website).exists()
          return website
-      websites = map(add_status, user_session.website_group.websites.all())
+      if (request.GET.get('follow_up') and user_session.follow_up_group):
+         target_group = user_session.follow_up_group
+      else:
+         target_group = user_session.website_group
+      websites = map(add_status, target_group.websites.all())
       return Response(WebsiteStatusSerializer(websites,many=True).data)
+   
+class AssignFollowUpToUserSessionAPI(APIView):
+   
+   def put(self, request, user_session_id, follow_up_group_id):
+      for assignment in request.data['assignments']:
+         user_session = UserSession.objects.get(pk=assignment['user_session_id'])
+         if (user_session.website_group.id == assignment['follow_up_group_id']):
+            return Response({'error': 'No se puede asignar el mismo grupo'}, status=status.HTTP_401_BAD_REQUEST)
+         user_session.follow_up_group_id = assignment['follow_up_group_id']
+         user_session.save()
+      return Response({'success': 'Follow-up asignados correctamente'})
