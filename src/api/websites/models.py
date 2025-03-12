@@ -13,7 +13,6 @@ class Website(models.Model):
     name = models.CharField(max_length=255)
     url = models.URLField()
     instructions = models.TextField()
-    #group = models.ManyToManyField(WebsiteGroup, related_name='websites')
     ux_analyzer_token = models.CharField(null=True, max_length=255)
 
 class WebsiteInGroup(models.Model):
