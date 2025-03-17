@@ -10,9 +10,22 @@ from django.db.models import Count
 import csv
 from django.http import StreamingHttpResponse
 
+def string_to_bool(value):
+      return value.lower() in ('true', '1', 'yes') 
+
+def get_user_sessions_by_filters(query_params):
+   filters = {}
+   if query_params.get('follow_up_group', None)  is not None:
+      filters['follow_up_group__isnull'] = not string_to_bool(query_params.get('follow_up_group'))
+   if query_params.get('repeated', None) is not None and not string_to_bool(query_params.get('repeated')):
+      unique_emails = UserSession.objects.filter(**filters).values('email').distinct()
+      filters['email__in'] = [email['email'] for email in unique_emails if UserSession.objects.filter(email=email['email']).count() == 1]
+   return UserSession.objects.filter(**filters)
+
 class GetUserSessionsAPI(APIView):
-    def get(self, request):
-      return Response(UserSessionWithWebsitesGroup(UserSession.objects.all(), many=True).data)
+
+   def get(self, request):
+      return Response(UserSessionWithWebsitesGroup(get_user_sessions_by_filters(request.GET), many=True).data)
 
 class CreateUserSessionAPI(APIView):
 
@@ -72,6 +85,7 @@ class Echo:
 class ExportUserSessionsAPI(APIView):
 
    def get(self, request):
+      referer = request.META.get('HTTP_REFERER', 'No referer')
       def format_row(session):
         return [
             session.id,
@@ -82,12 +96,14 @@ class ExportUserSessionsAPI(APIView):
             session.gender,
             session.purchases,
             session.date,
+            session.follow_up_group.name if session.follow_up_group else "No asignado",
+            referer + "start?sessionId=" + str(session.id)
         ]
       
       pseudo_buffer = Echo()
       writer = csv.writer(pseudo_buffer)
-      rows = list(map(format_row, UserSession.objects.all()))
-      header = [["id", "website_group", "email", "country", "age", "gender", "purchases", "date"]]
+      rows = list(map(format_row, get_user_sessions_by_filters(request.GET)))
+      header = [["id", "website_group", "email", "country", "age", "gender", "purchases", "date", "follow_up", "link"]]
       return StreamingHttpResponse(
         (writer.writerow(row) for row in (header + rows)),
         content_type="text/csv",
