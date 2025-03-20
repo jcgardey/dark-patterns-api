@@ -15,6 +15,9 @@ class Website(models.Model):
     instructions = models.TextField()
     ux_analyzer_token = models.CharField(null=True, max_length=255)
 
+    def is_dark(self):
+        return 'enabled=true' in self.url
+        
 class WebsiteInGroup(models.Model):
     website = models.ForeignKey(Website, on_delete=models.CASCADE)
     group = models.ForeignKey(WebsiteGroup, on_delete=models.CASCADE, related_name='website_items')
