@@ -16,7 +16,13 @@ def string_to_bool(value):
 def get_user_sessions_by_filters(query_params):
    filters = {}
    if query_params.get('follow_up_group', None)  is not None:
-      filters['follow_up_group__isnull'] = not string_to_bool(query_params.get('follow_up_group'))
+      if query_params.get('follow_up_group') == 'not_assigned'  or query_params.get('follow_up_group') == 'assigned':
+         filters['follow_up_group__isnull'] = query_params.get('follow_up_group') == 'not_assigned'
+      elif query_params.get('follow_up_group') == 'completed':
+         filters['id__in'] = [user_session.id for user_session in UserSession.objects.all() if user_session.is_follow_up_group_completed()]
+      elif query_params.get('follow_up_group') == 'not_completed':
+         filters['follow_up_group__isnull'] = False
+         filters['id__in'] = [user_session.id for user_session in UserSession.objects.all() if not user_session.is_follow_up_group_completed()]
    if query_params.get('repeated', None) is not None and not string_to_bool(query_params.get('repeated')):
       unique_emails = UserSession.objects.filter(**filters).values('email').distinct()
       filters['email__in'] = [email['email'] for email in unique_emails if UserSession.objects.filter(email=email['email']).count() == 1]

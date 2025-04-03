@@ -31,7 +31,11 @@ class WebsiteGroupSerializer(serializers.ModelSerializer):
 class UserSessionWithWebsitesGroup(serializers.ModelSerializer):
     website_group = WebsiteGroupSerializer()
     follow_up_group = WebsiteGroupSerializer()
+    is_follow_up_group_completed = serializers.SerializerMethodField()
+
+    def get_is_follow_up_group_completed(self, session):
+        return session.is_follow_up_group_completed()
 
     class Meta:
         model = UserSession
-        fields = ('id', 'date', 'email', 'website_group', 'follow_up_group')
+        fields = ('id', 'date', 'email', 'website_group', 'follow_up_group', 'is_follow_up_group_completed')

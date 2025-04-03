@@ -25,4 +25,12 @@ class UserSession(models.Model):
     purchases = models.CharField(choices=PURCHASE_CHOICES, default='none', max_length=6)
     website_group = models.ForeignKey(WebsiteGroup, on_delete=models.CASCADE, related_name='user_sessions', null=True)
     follow_up_group = models.ForeignKey(WebsiteGroup, on_delete=models.CASCADE, related_name='follow_ups', null=True)
+
+    def is_follow_up_group_completed(self):
+        if not self.follow_up_group:
+            return False
+        for sample in self.samples.all():
+            if not self.follow_up_group.website_items.filter(website=sample.website).exists():
+                return False
+        return True
     
