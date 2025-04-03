@@ -29,8 +29,8 @@ class UserSession(models.Model):
     def is_follow_up_group_completed(self):
         if not self.follow_up_group:
             return False
-        for sample in self.samples.all():
-            if not self.follow_up_group.website_items.filter(website=sample.website).exists():
+        for website_item in self.follow_up_group.website_items.all():
+            if not self.samples.filter(website=website_item.website).exists():
                 return False
         return True
     
