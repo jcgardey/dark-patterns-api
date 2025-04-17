@@ -43,7 +43,7 @@ class ExportSamplesAPI(APIView):
    def get(self, request):
 
       def filter_samples(filter):
-         samples = Sample.objects.all()
+         samples = Sample.objects.all().order_by('user_session__email')
          if filter == 'first_round':
             return [ sample for sample in samples if sample.user_session.is_first_round_sample(sample) ]
          elif filter == 'follow_up_completed':
