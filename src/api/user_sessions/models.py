@@ -33,4 +33,12 @@ class UserSession(models.Model):
             if not self.samples.filter(website=website_item.website).exists():
                 return False
         return True
+        
+    def is_first_round_sample(self, sample):
+        if not self.website_group:
+            return False
+        for website_item in self.website_group.website_items.all():
+            if sample.website == website_item.website:
+                return True
+        return False
     

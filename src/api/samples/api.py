@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import csv
+import json
 from django.http import StreamingHttpResponse
 
 from .models import Sample
@@ -41,6 +42,14 @@ class ExportSamplesAPI(APIView):
 
    def get(self, request):
 
+      def filter_samples(filter):
+         samples = Sample.objects.all()
+         if filter == 'first_round':
+            return [ sample for sample in samples if sample.user_session.is_first_round_sample(sample) ]
+         elif filter == 'follow_up_completed':
+            return [ sample for sample in samples if sample.user_session.is_follow_up_group_completed() ]
+         return samples
+
       def format_row(sample):
          return [
             sample.user_session.id,
@@ -49,13 +58,16 @@ class ExportSamplesAPI(APIView):
             sample.website.is_dark(), 
             sample.start, 
             sample.end, 
-            sample.questionnaire, 
+            sample.questionnaire['trustworthy'], 
+            sample.questionnaire['frustrating'], 
+            sample.questionnaire['confusing'], 
+            sample.questionnaire['experience'], 
             sample.sample_data
          ]
       pseudo_buffer = Echo()
       writer = csv.writer(pseudo_buffer)
-      rows = list(map(format_row, Sample.objects.all()))
-      header = [["id", "usuario", "website", "dark", "start", "end", "questionnaire", "sample_data"]]
+      rows = list(map(format_row, filter_samples(request.GET.get('filter', 'all'))))
+      header = [["id", "usuario", "website", "dark", "start", "end", "trustworthy", "frustrating", "confusing", "experience", "sample_data"]]
       return StreamingHttpResponse (
         (writer.writerow(row) for row in (header + rows)),
         content_type="text/csv",
