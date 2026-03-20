@@ -14,6 +14,7 @@ services:
       DB_HOST: ${DB_HOST}
     networks:
       - traefik-public
+      - app-network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`${APP_HOST}`) && PathPrefix(`/api`)"
@@ -43,6 +44,8 @@ services:
       SERVICE_TAGS: dev
     volumes:
       - database:/var/lib/mysql
+    networks:
+      - app-network
 volumes:
   database:
     driver: local
@@ -50,3 +53,5 @@ volumes:
 networks:
   traefik-public:
     external: true
+  app-network:
+    driver: bridge
