@@ -17,6 +17,7 @@ services:
       - app-network
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
       - "traefik.http.routers.dark-patterns-api.rule=Host(`${APP_HOST}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.dark-patterns-api.entrypoints=web"
       # Forward requests to the correct port on the container
