@@ -28,6 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 'sitios-dp.lifia.info.unlp.edu.ar']
 
+# Https and proxy settings
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+
 
 # Application definition
 
