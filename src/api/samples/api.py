@@ -45,31 +45,37 @@ class ExportSamplesAPI(APIView):
       def filter_samples(filter):
          samples = Sample.objects.all().order_by('user_session__email')
          if filter == 'first_round':
-            return [ sample for sample in samples if sample.user_session.is_first_round_sample(sample) ]
+            return [sample for sample in samples if sample.user_session.is_first_round_sample(sample)]
          elif filter == 'follow_up_completed':
-            return [ sample for sample in samples if sample.user_session.is_follow_up_group_completed() ]
+            return [sample for sample in samples if sample.user_session.is_follow_up_group_completed()]
          return samples
 
       def format_row(sample):
          return [
             sample.user_session.id,
-            sample.user_session.email, 
+            sample.user_session.email,
             sample.website.name,
-            sample.website.is_dark(), 
-            sample.start, 
-            sample.end, 
-            sample.questionnaire['trustworthy'], 
-            sample.questionnaire['frustrating'], 
-            sample.questionnaire['confusing'], 
-            sample.questionnaire['experience'], 
+            sample.website.is_dark(),
+            sample.start,
+            sample.end,
+            sample.questionnaire['advantage'],
+            sample.questionnaire['trustworthy'],
+            sample.questionnaire['frustrating'],
+            sample.questionnaire['confusing'],
+            sample.questionnaire['experience'],
             sample.sample_data
          ]
+
       pseudo_buffer = Echo()
       writer = csv.writer(pseudo_buffer)
       rows = list(map(format_row, filter_samples(request.GET.get('filter', 'all'))))
-      header = [["id", "usuario", "website", "dark", "start", "end", "trustworthy", "frustrating", "confusing", "experience", "sample_data"]]
-      return StreamingHttpResponse (
-        (writer.writerow(row) for row in (header + rows)),
-        content_type="text/csv",
-        headers={"Content-Disposition": 'attachment; filename="muestras.csv"'},
+      header = [[
+         "id", "usuario", "website", "dark", "start", "end",
+         "advantage", "trustworthy", "frustrating", "confusing", "experience", "sample_data"
+      ]]
+
+      return StreamingHttpResponse(
+         (writer.writerow(row) for row in (header + rows)),
+         content_type="text/csv",
+         headers={"Content-Disposition": 'attachment; filename="muestras.csv"'},
       )
