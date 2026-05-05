@@ -9,6 +9,7 @@ services:
       SERVICE_NAME: api
       SERVICE_TAGS: dev
       DB_NAME: ${DB_NAME}
+      DB_ENGINE: ${DB_ENGINE}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_HOST: ${DB_HOST}
